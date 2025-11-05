@@ -1,14 +1,18 @@
 import { Component } from '@angular/core';
-
 import { RouterOutlet } from '@angular/router';
-import { Navbar } from '../../../components/navbar/navbar';
 import { Sidebar } from '../../../components/sidebar/sidebar';
-import { Home } from '../home/home';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-layout',
-  imports: [Sidebar, RouterOutlet, Home, Navbar],
+  imports: [Sidebar, RouterOutlet],
   templateUrl: './layout.html',
   styleUrl: './layout.css',
 })
-export class Layout {}
+export class Layout {
+  constructor(private authService: AuthService) {}
+
+  logout() {
+    this.authService.logout();
+  }
+}

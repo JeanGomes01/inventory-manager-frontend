@@ -14,8 +14,12 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: '',
+        redirectTo: 'home',
         pathMatch: 'full',
+      },
+      {
+        path: 'home',
+        loadComponent: () => import('./modules/home/home').then((c) => c.Home),
       },
     ],
   },

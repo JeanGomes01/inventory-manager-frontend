@@ -1,13 +1,19 @@
-<div class="flex h-screen bg-gray-100">
+<div class="flex h-screen">
   <app-sidebar></app-sidebar>
 
-  <div class="flex-1 flex flex-col">
-    <app-navbar></app-navbar>
+  <main class="flex flex-col w-full h-screen overflow-hidden">
+    <header class="bg-white shadow p-4 flex justify-between items-center">
+      <h2 class="text-xl font-semibold">Gestão de Estoque</h2>
+      <div class="flex items-center gap-4">
+        <span class="text-gray-600">Olá, Jean</span>
+        <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600" (click)="logout()">
+          Logout
+        </button>
+      </div>
+    </header>
 
-    <main class="flex-1 overflow-y-auto p-6">
-      <router-outlet>
-        <app-home></app-home>
-      </router-outlet>
-    </main>
-  </div>
+    <div class="flex-1 overflow-y-auto p-6">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
 </div>
