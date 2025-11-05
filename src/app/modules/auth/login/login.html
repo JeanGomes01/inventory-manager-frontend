@@ -10,7 +10,7 @@
 
   <form
     class="relative bg-white/80 backdrop-blur-sm border border-gray-300 p-6 sm:p-10 rounded-3xl shadow-lg w-full max-w-sm sm:max-w-md text-gray-800 transition-all duration-500 z-10"
-    onsubmit="handleLogin($event)"
+    (ngSubmit)="handleLogin()"
   >
     <h2 class="text-2xl sm:text-3xl font-semibold text-center mb-6 sm:mb-8 text-gray-900">
       Acesse sua conta
