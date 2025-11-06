@@ -17,6 +17,16 @@
       Acesse sua conta
     </h2>
 
+    @if (successMessage) {
+    <div class="mb-4 p-3 rounded-md text-sm text-green-700 bg-green-100 border border-green-300">
+      {{ successMessage }}
+    </div>
+    } @if (errorMessage) {
+    <div class="mb-4 p-3 rounded-md text-sm text-red-700 bg-red-100 border border-red-300">
+      {{ errorMessage }}
+    </div>
+    }
+
     <div class="mb-4">
       <label for="login-email" class="block mb-1 text-gray-700">Email</label>
       <input
@@ -78,6 +88,16 @@
     class="relative bg-white/80 backdrop-blur-sm border border-gray-300 p-6 sm:p-10 rounded-3xl shadow-lg w-full max-w-sm sm:max-w-md text-gray-800 z-10"
   >
     <h2 class="text-2xl sm:text-3xl font-semibold text-center mb-6 text-gray-900">Criar conta</h2>
+
+    @if (successMessage) {
+    <div class="mb-4 p-3 rounded-md text-sm text-green-700 bg-green-100 border border-green-300">
+      {{ successMessage }}
+    </div>
+    } @if (errorMessage) {
+    <div class="mb-4 p-3 rounded-md text-sm text-red-700 bg-red-100 border border-red-300">
+      {{ errorMessage }}
+    </div>
+    }
 
     <div class="mb-4">
       <label for="reg-name" class="block mb-1 text-gray-700">Nome Completo</label>

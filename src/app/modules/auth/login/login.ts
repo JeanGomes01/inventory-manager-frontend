@@ -17,6 +17,9 @@ export class Login {
   confirmPassword = '';
   isRegister = false;
 
+  successMessage = '';
+  errorMessage = '';
+
   constructor(private authService: AuthService, private router: Router) {}
 
   toggleForm() {
@@ -25,7 +28,8 @@ export class Login {
 
   handleRegister() {
     if (this.password !== this.confirmPassword) {
-      alert('As senhas devem ser iguais');
+      this.errorMessage = 'As senhas devem ser iguais';
+      this.successMessage = '';
       return;
     }
 
@@ -37,12 +41,18 @@ export class Login {
     this.authService.register(registerData).subscribe({
       next: (response) => {
         localStorage.setItem('access_token', response.access_token);
-        alert('Cadastro realizado com sucesso!');
-        this.toggleForm();
+        this.successMessage = 'Cadastro realizado com sucesso !';
+        this.errorMessage = '';
+
+        setTimeout(() => {
+          this.successMessage = '';
+          this.toggleForm();
+        }, 2000);
       },
       error: (err) => {
         console.error('Erro ao cadastrar usuário', err);
-        alert('Erro ao cadastrar usuário');
+        this.errorMessage = 'Erro ao cadastrar usuário';
+        this.successMessage = '';
       },
     });
   }
@@ -56,10 +66,17 @@ export class Login {
     this.authService.login(credentials).subscribe({
       next: (response) => {
         localStorage.setItem('access_token', response.access_token);
-        this.router.navigate(['/home']);
+        this.successMessage = 'Login realizado com sucesso !';
+        this.errorMessage = '';
+
+        setTimeout(() => {
+          this.router.navigate(['/home']);
+        }, 1500);
       },
       error: (err) => {
         console.error('Erro em suas credenciais. Tente novamente', err);
+        this.errorMessage = 'Erro em suas credenciais. Tente novamente';
+        this.successMessage = '';
       },
     });
   }
