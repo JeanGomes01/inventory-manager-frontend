@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { ILogin, ILoginResponse } from '../modules/auth/login/login.interface';
+import { ILogin, ILoginResponse } from '../types/login.interface';
+import { IUserResponse } from '../types/user.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -25,5 +26,9 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return !!localStorage.getItem('access_token');
+  }
+
+  register(data: { email: string; password: string }): Observable<IUserResponse> {
+    return this.http.post<IUserResponse>(`${this.apiUrl}/users`, data);
   }
 }
