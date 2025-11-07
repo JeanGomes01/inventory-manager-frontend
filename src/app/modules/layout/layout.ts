@@ -10,6 +10,8 @@ import { Sidebar } from '../../shared/components/sidebar/sidebar';
   styleUrl: './layout.css',
 })
 export class Layout {
+  isMenuOpen = false;
+
   constructor(private authService: AuthService) {}
 
   logout() {

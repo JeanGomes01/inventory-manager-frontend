@@ -3,12 +3,39 @@
 
   <main class="flex flex-col w-full h-screen overflow-hidden">
     <header class="bg-white shadow p-4 flex justify-between items-center">
-      <h2 class="text-xl font-semibold">Gestão de Estoque</h2>
-      <div class="flex items-center gap-4">
-        <span class="text-gray-600">Olá, Jean</span>
-        <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600" (click)="logout()">
-          Logout
-        </button>
+      <h2 class="text-xl font-semibold text-gray-800">Gestão de Estoque</h2>
+
+      <div class="flex items-center gap-4 relative">
+        <span class="text-gray-700 font-medium">Olá, Jean</span>
+
+        <div class="avatar cursor-pointer" (click)="isMenuOpen = !isMenuOpen">
+          <div class="w-12 h-12 rounded-lg border border-gray-300 overflow-hidden">
+            <img
+              src="https://www.w3schools.com/howto/img_avatar.png"
+              alt="Avatar neutro"
+              class="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+
+        <div
+          class="absolute right-0 top-14 bg-white rounded-xl shadow-lg border border-gray-100 w-52 p-2 transition-all duration-200 text-gray-700"
+          [class.hidden]="!isMenuOpen"
+        >
+          <ul class="menu">
+            <li>
+              <a class="hover:bg-gray-100 rounded-md cursor-pointer">👤 Gerenciar Perfil</a>
+            </li>
+            <li>
+              <a class="hover:bg-gray-100 rounded-md cursor-pointer">🔒 Privacidade</a>
+            </li>
+            <li>
+              <a (click)="logout()" class="text-red-500 hover:bg-red-100 rounded-md cursor-pointer">
+                🚪 Sair
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </header>
 
