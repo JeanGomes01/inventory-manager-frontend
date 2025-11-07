@@ -1,0 +1,39 @@
+<div class="drawer relative">
+  <aside
+    class="bg-base-200 text-base-content p-6 flex flex-col transition-all duration-300 h-screen relative"
+    [ngClass]="{ 'w-80': isOpen, 'w-20': !isOpen }"
+  >
+    <button
+      class="btn btn-primary btn-sm absolute top-4 right-4 focus:outline-none focus:ring-0"
+      (click)="toggleSidebar()"
+      aria-label="Abrir/Fechar menu"
+    >
+      <mat-icon>{{ isOpen ? 'chevron_left' : 'chevron_right' }}</mat-icon>
+    </button>
+
+    <h1 class="text-2xl font-bold mb-8" [hidden]="!isOpen">Inventory</h1>
+
+    <nav class="space-y-3 mt-12 flex-1">
+      <a href="#" class="flex items-center gap-3 p-2 rounded hover:bg-base-100">
+        <span class="material-icons">dashboard</span>
+        <span [hidden]="!isOpen">Dashboard</span>
+      </a>
+      <a href="products" class="flex items-center gap-3 p-2 rounded hover:bg-base-100">
+        <span class="material-icons">inventory_2</span>
+        <span [hidden]="!isOpen">Products</span>
+      </a>
+      <a href="#" class="flex items-center gap-3 p-2 rounded hover:bg-base-100">
+        <span class="material-icons">store</span>
+        <span [hidden]="!isOpen">Estoque</span>
+      </a>
+      <a href="#" class="flex items-center gap-3 p-2 rounded hover:bg-base-100">
+        <span class="material-icons">people</span>
+        <span [hidden]="!isOpen">Clientes</span>
+      </a>
+      <a href="#" class="flex items-center gap-3 p-2 rounded hover:bg-base-100">
+        <span class="material-icons">bar_chart</span>
+        <span [hidden]="!isOpen">Relatórios</span>
+      </a>
+    </nav>
+  </aside>
+</div>
