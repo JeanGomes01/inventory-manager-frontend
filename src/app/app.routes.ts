@@ -21,6 +21,14 @@ export const routes: Routes = [
         path: 'home',
         loadComponent: () => import('./modules/home/home').then((c) => c.Home),
       },
+      {
+        path: 'products',
+        loadComponent: () => import('./modules/products/products').then((c) => c.Products),
+      },
+      {
+        path: 'movements',
+        loadComponent: () => import('./modules/movements/movements').then((c) => c.Movements),
+      },
     ],
   },
 ];
