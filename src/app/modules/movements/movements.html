@@ -1,1 +1,31 @@
-<p>movements works!</p>
+<div class="p-6">
+  <h2 class="text-2xl font-bold mb-4">Movements</h2>
+
+  <!-- Tabela de Movimentações -->
+  <table class="table-auto w-full border border-gray-300 rounded-lg shadow">
+    <thead class="bg-gray-200">
+      <tr>
+        <th class="p-3 text-left">Produto</th>
+        <th class="p-3 text-left">Tipo</th>
+        <th class="p-3 text-center">Quantidade</th>
+        <th class="p-3 text-center">Data/Hora</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let movement of movements">
+        <td class="p-3">{{ movement.productName || movement.productId }}</td>
+        <td
+          class="p-3 text-left"
+          [ngClass]="{
+            'text-green-600': movement.type === 'entrada',
+            'text-red-600': movement.type === 'saida'
+          }"
+        >
+          {{ movement.type }}
+        </td>
+        <td class="p-3 text-center">{{ movement.quantity }}</td>
+        <td class="p-3 text-center">{{ formatDate(movement.createdAt) }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -6,7 +6,7 @@
       <h2 class="text-xl font-semibold text-gray-800">Gestão de Estoque</h2>
 
       <div class="flex items-center gap-4 relative">
-        <span class="text-gray-700 font-medium">Olá, Jean</span>
+        <span class="text-gray-700 font-medium">Olá, {{ userName || 'Usuario' }}</span>
 
         <div class="avatar cursor-pointer" (click)="isMenuOpen = !isMenuOpen">
           <div class="w-12 h-12 rounded-lg border border-gray-300 overflow-hidden">

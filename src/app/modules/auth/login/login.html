@@ -33,6 +33,7 @@
         id="login-email"
         name="email"
         type="email"
+        [(ngModel)]="email"
         required
         placeholder="Digite seu email"
         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
@@ -45,6 +46,7 @@
         id="login-password"
         name="password"
         type="password"
+        [(ngModel)]="password"
         required
         placeholder="Digite sua senha"
         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
@@ -105,6 +107,7 @@
         id="reg-name"
         name="name"
         type="text"
+        [(ngModel)]="name"
         required
         placeholder="Digite seu nome"
         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
@@ -117,6 +120,7 @@
         id="reg-email"
         name="email"
         type="email"
+        [(ngModel)]="email"
         required
         placeholder="Digite seu email"
         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
@@ -129,6 +133,7 @@
         id="reg-password"
         name="password"
         type="password"
+        [(ngModel)]="password"
         required
         placeholder="Crie uma senha"
         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"

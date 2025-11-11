@@ -12,6 +12,7 @@ import { ILogin } from '../../../types/login.interface';
   styleUrl: './login.css',
 })
 export class Login {
+  name = '';
   email = '';
   password = '';
   confirmPassword = '';
@@ -34,6 +35,7 @@ export class Login {
     }
 
     const registerData = {
+      name: this.name,
       email: this.email,
       password: this.password,
     };
