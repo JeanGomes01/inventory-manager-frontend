@@ -24,6 +24,8 @@ export class Products implements OnInit {
     this.loadProducts();
     this.initForm();
 
+    setTimeout(() => this.updatePriceDisplay(0));
+
     this.productsService.getProducts().subscribe((data) => {
       this.products = data;
       this.calculateTotals();
@@ -72,5 +74,44 @@ export class Products implements OnInit {
 
   isLowStock(product: IProduct): boolean {
     return product.quantity < 5;
+  }
+
+  deleteProduct(id: number) {
+    this.productsService.deleteProduct(id).subscribe({
+      next: () => this.loadProducts(),
+      error: (err) => console.error(err),
+    });
+  }
+
+  updatePriceDisplay(value: number) {
+    const formatted = value.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+    const input = document.querySelector<HTMLInputElement>('input[formControlName="price"]');
+    if (input) input.value = formatted;
+  }
+
+  onPriceInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    let value = input.value.replace(/\D/g, '');
+
+    if (!value) {
+      this.productForm.patchValue({ price: 0 }, { emitEvent: false });
+      input.value = '';
+      return;
+    }
+
+    const numericValue = Number(value) / 100;
+
+    this.productForm.patchValue({ price: numericValue }, { emitEvent: false });
+
+    const formatted = numericValue.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+
+    input.value = formatted;
   }
 }
