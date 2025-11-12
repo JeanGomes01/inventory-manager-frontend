@@ -1,3 +1,6 @@
+Certo, então eu quero criar um formulário de criação de produto fixo melhor embaixo ou acima da
+tabela ?
+
 <div class="p-6">
   <div class="grid grid-cols-3 gap-4 mb-6">
     <div class="bg-gray-100 rounded-lg p-4 text-center shadow">
@@ -14,6 +17,50 @@
         {{ totalValue | currency : 'BRL' : 'symbol' : '1.2-2' }}
       </p>
     </div>
+  </div>
+
+  <div class="bg-gray-50 p-6 rounded-lg shadow-inner mb-6">
+    <h3 class="text-lg font-semibold mb-4 text-gray-700">Adicionar Produto</h3>
+
+    <form [formGroup]="productForm" (ngSubmit)="createProduct()" class="grid grid-cols-4 gap-4">
+      <input
+        type="text"
+        placeholder="Nome"
+        formControlName="name"
+        class="border p-2 rounded-md col-span-1 focus:ring-2 focus:ring-blue-400 outline-none"
+      />
+
+      <input
+        type="text"
+        placeholder="Descrição"
+        formControlName="description"
+        class="border p-2 rounded-md col-span-1 focus:ring-2 focus:ring-blue-400 outline-none"
+      />
+
+      <input
+        type="number"
+        placeholder="Qtd"
+        formControlName="quantity"
+        class="border p-2 rounded-md col-span-1 focus:ring-2 focus:ring-blue-400 outline-none"
+      />
+
+      <input
+        type="number"
+        step="0.01"
+        placeholder="Preço"
+        formControlName="price"
+        class="border p-2 rounded-md col-span-1 focus:ring-2 focus:ring-blue-400 outline-none"
+      />
+
+      <div class="col-span-4 flex justify-end mt-2">
+        <button
+          [disabled]="productForm.invalid"
+          class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md shadow-sm transition-all"
+        >
+          Criar Produto
+        </button>
+      </div>
+    </form>
   </div>
 
   <table class="table-auto w-full border border-gray-300 rounded-lg shadow">
@@ -38,10 +85,26 @@
         <td class="p-3 text-center">
           {{ product.price * product.quantity | currency : 'BRL' : 'symbol' }}
         </td>
-        <td class="p-3 text-center space-x-2">
-          <button class="btn btn-sm btn-primary">Editar</button>
-          <button class="btn btn-sm btn-secondary">Movimentar</button>
-          <button class="btn btn-sm btn-error">Excluir</button>
+        <td class="p-3 text-center">
+          <div class="flex justify-center gap-2">
+            <button
+              class="btn bg-blue-500 hover:bg-blue-600 text-white border-none px-4 py-2 text-sm rounded-md shadow-sm hover:shadow-md transition-all"
+            >
+              Editar
+            </button>
+
+            <button
+              class="btn bg-yellow-500 hover:bg-yellow-600 text-white border-none px-4 py-2 text-sm rounded-md shadow-sm hover:shadow-md transition-all"
+            >
+              Movimentar
+            </button>
+
+            <button
+              class="btn bg-red-500 hover:bg-red-600 text-white border-none px-4 py-2 text-sm rounded-md shadow-sm hover:shadow-md transition-all"
+            >
+              Excluir
+            </button>
+          </div>
         </td>
       </tr>
     </tbody>

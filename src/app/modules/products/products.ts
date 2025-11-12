@@ -1,29 +1,56 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductsService } from '../../services/products.service';
 import { IProduct } from '../../types/product.interface';
 
 @Component({
   selector: 'app-products',
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './products.html',
   styleUrl: './products.css',
 })
 export class Products implements OnInit {
   products: IProduct[] = [];
+  productForm!: FormGroup;
 
   totalProducts = 0;
   totalQuantity = 0;
   totalValue = 0;
 
-  constructor(private productsService: ProductsService) {}
+  constructor(private productsService: ProductsService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.loadProducts();
+    this.initForm();
 
     this.productsService.getProducts().subscribe((data) => {
       this.products = data;
       this.calculateTotals();
+    });
+  }
+
+  initForm() {
+    this.productForm = this.fb.group({
+      name: ['', Validators.required],
+      description: [''],
+      quantity: [0, [Validators.required, Validators.min(0)]],
+      price: [0, [Validators.required, Validators.min(0)]],
+    });
+  }
+
+  createProduct() {
+    if (this.productForm.invalid) return;
+
+    const newProduct = this.productForm.value;
+
+    this.productsService.createProduct(newProduct).subscribe({
+      next: (created) => {
+        this.products.push(created);
+        this.calculateTotals();
+        this.productForm.reset({ quantity: 0, price: 0 });
+      },
+      error: (err) => console.error('Erro ao criar produto', err),
     });
   }
 
