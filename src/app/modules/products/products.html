@@ -73,7 +73,13 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let product of products" [ngClass]="{ 'bg-red-100': isLowStock(product) }">
+      <tr
+        *ngFor="let product of products"
+        [ngClass]="{
+          'bg-red-100 transition-colors duration-500': highlightedProductId === product.id,
+          'bg-red-50': isLowStock(product) && highlightedProductId !== product.id
+        }"
+      >
         <td class="p-3">{{ product.name }}</td>
         <td class="p-3">{{ product.description || '-' }}</td>
         <td class="p-3 text-center font-semibold">{{ product.quantity }}</td>

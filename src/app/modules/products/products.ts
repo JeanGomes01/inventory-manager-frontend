@@ -14,6 +14,8 @@ export class Products implements OnInit {
   products: IProduct[] = [];
   productForm!: FormGroup;
 
+  highlightedProductId: number | null = null;
+
   totalProducts = 0;
   totalQuantity = 0;
   totalValue = 0;
@@ -21,15 +23,10 @@ export class Products implements OnInit {
   constructor(private productsService: ProductsService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    this.loadProducts();
+    console.log('🧠 ngOnInit disparado!');
     this.initForm();
-
+    this.loadProducts();
     setTimeout(() => this.updatePriceDisplay(0));
-
-    this.productsService.getProducts().subscribe((data) => {
-      this.products = data;
-      this.calculateTotals();
-    });
   }
 
   initForm() {
@@ -42,14 +39,26 @@ export class Products implements OnInit {
   }
 
   createProduct() {
+    console.log('🟢 Enviando criação de produto...');
+
     if (this.productForm.invalid) return;
 
-    const newProduct = this.productForm.value;
+    const newProduct = {
+      ...this.productForm.value,
+      quantity: Number(this.productForm.value.quantity) || 0,
+      price: Number(this.productForm.value.price) || 0,
+    };
 
     this.productsService.createProduct(newProduct).subscribe({
       next: (created) => {
+        console.log('✅ Produto criado:', created);
         this.products.push(created);
-        this.calculateTotals();
+
+        this.highlightedProductId = created.id;
+        setTimeout(() => {
+          this.highlightedProductId = null;
+        }, 1000);
+
         this.productForm.reset({ quantity: 0, price: 0 });
       },
       error: (err) => console.error('Erro ao criar produto', err),
@@ -57,9 +66,13 @@ export class Products implements OnInit {
   }
 
   loadProducts() {
+    console.log('📦 Chamando loadProducts...');
     this.productsService.getProducts().subscribe({
-      next: (res) => (this.products = res),
-      error: (err) => console.error(err),
+      next: (response) => {
+        console.log('📥 Produtos recebidos:', response);
+        this.products = response;
+        this.calculateTotals();
+      },
     });
   }
 
