@@ -14,4 +14,20 @@ export class ProductsService {
   getProducts(): Observable<IProduct[]> {
     return this.http.get<IProduct[]>(this.apiUrl);
   }
+
+  createProduct(product: Partial<IProduct>): Observable<IProduct> {
+    return this.http.post<IProduct>(this.apiUrl, product);
+  }
+
+  updateProduct(id: number, product: Partial<IProduct>): Observable<IProduct> {
+    return this.http.put<IProduct>(`${this.apiUrl}/${id}`, product);
+  }
+
+  deleteProduct(id: number): Observable<IProduct> {
+    return this.http.delete<IProduct>(`${this.apiUrl}/${id}`);
+  }
+
+  deleteAllProducts(): Observable<IProduct[]> {
+    return this.http.delete<IProduct[]>(this.apiUrl);
+  }
 }
