@@ -22,10 +22,21 @@
         <span class="material-icons">inventory_2</span>
         <span [hidden]="!isOpen">Products</span>
       </a>
+
       <a href="movements" class="flex items-center gap-3 p-2 rounded hover:bg-base-100">
         <span class="material-icons">sync_alt</span>
-        <span [hidden]="!isOpen">Movements</span>
+
+        <span class="flex items-center gap-2 relative" [hidden]="!isOpen">
+          Movements @if (movementsCount > 0) {
+          <span
+            class="bg-orange-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full"
+          >
+            {{ movementsCount }}
+          </span>
+          }
+        </span>
       </a>
+
       <a href="#" class="flex items-center gap-3 p-2 rounded hover:bg-base-100">
         <span class="material-icons">store</span>
         <span [hidden]="!isOpen">Estoque</span>
