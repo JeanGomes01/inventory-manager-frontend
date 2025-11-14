@@ -11,7 +11,8 @@
     <div class="bg-gray-100 rounded-lg p-4 text-center shadow">
       <h3 class="text-gray-500 text-sm">Valor Total</h3>
       <p class="text-2xl font-bold">
-        {{ totalValue | currency : 'BRL' : 'symbol' : '1.2-2' }}
+        <span>R$</span>
+        <span class="ml-1">{{ totalValue | number : '1.2-2' }}</span>
       </p>
     </div>
   </div>
