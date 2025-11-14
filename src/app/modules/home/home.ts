@@ -51,7 +51,24 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     this.movementsService.getMovements().subscribe((movements) => {
       this.recentMovements = movements.slice(0, 5);
       this.recentMovementsCount = movements.length;
+
+      this.updateDoughnutChart(movements);
     });
+  }
+
+  updateDoughnutChart(movements: any[]) {
+    if (!this.doughnutChart) return;
+
+    const entriesMovements = movements
+      .filter((movement) => movement.type === 'entrada')
+      .reduce((sum, movement) => sum + movement.quantity, 0);
+
+    const exitsMovements = movements
+      .filter((movement) => movement.type === 'saida')
+      .reduce((sum, movement) => sum + movement.quantity, 0);
+
+    this.doughnutChart.data.datasets[0].data = [entriesMovements, exitsMovements];
+    this.doughnutChart.update();
   }
 
   buildCharts() {
