@@ -1,4 +1,4 @@
-<div class="flex h-screen bg-gray-100">
+<div class="flex min-h-screen bg-gray-100">
   <div class="flex-1 flex flex-col">
     <div class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div class="bg-white p-4 rounded shadow flex justify-between items-center">
@@ -120,10 +120,10 @@
     </div>
 
     <button
-      class="fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600"
+      class="fixed bottom-8 right-8 bg-green-600 text-white w-14 h-14 flex items-center justify-center rounded-full shadow-xl hover:bg-green-700 transition"
       (click)="onAddItem()"
     >
-      <i class="material-icons">add</i>
+      <i class="material-icons text-3xl">add</i>
     </button>
   </div>
 </div>

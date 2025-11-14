@@ -45,16 +45,12 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       this.lowStockProducts = products.filter((p: any) => p.quantity < 5);
       this.lowStockCount = this.lowStockProducts.length;
 
-      // Atualiza gráfico assim que tiver dados
       this.updateLowStockChart();
     });
 
     this.movementsService.getMovements().subscribe((movements) => {
       this.recentMovements = movements.slice(0, 5);
       this.recentMovementsCount = movements.length;
-
-      // Exemplo futuramente p/ atualizar o donut
-      // this.updateDoughnutChart();
     });
   }
 
