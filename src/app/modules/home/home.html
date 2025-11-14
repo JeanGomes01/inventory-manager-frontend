@@ -4,73 +4,116 @@
       <div class="bg-white p-4 rounded shadow flex justify-between items-center">
         <div>
           <h3 class="text-gray-500">Total de Produtos</h3>
-          <p class="text-2xl font-bold">120</p>
+          <p class="text-2xl font-bold">{{ totalProducts }}</p>
         </div>
         <div class="text-blue-500 text-3xl">
           <i class="material-icons">inventory_2</i>
         </div>
       </div>
+
       <div class="bg-white p-4 rounded shadow flex justify-between items-center">
         <div>
           <h3 class="text-gray-500">Produtos em Falta</h3>
-          <p class="text-2xl font-bold">15</p>
+          <p class="text-2xl font-bold">{{ lowStockCount }}</p>
         </div>
         <div class="text-yellow-500 text-3xl">
           <i class="material-icons">warning</i>
         </div>
       </div>
+
       <div class="bg-white p-4 rounded shadow flex justify-between items-center">
         <div>
-          <h3 class="text-gray-500">Fornecedores</h3>
-          <p class="text-2xl font-bold">8</p>
+          <h3 class="text-gray-500">Movimentações Recentes</h3>
+          <p class="text-2xl font-bold">{{ recentMovementsCount }}</p>
         </div>
         <div class="text-green-500 text-3xl">
-          <i class="material-icons">local_shipping</i>
+          <i class="material-icons">sync_alt</i>
         </div>
       </div>
     </div>
 
-    <div class="p-6 flex-1 overflow-auto">
-      <div class="bg-white rounded shadow overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
+    <!-- ==================== ALERTA ==================== -->
+    @if (lowStockProducts.length > 0) {
+    <div class="px-6">
+      <div class="bg-yellow-100 border-l-4 border-yellow-500 p-4 mb-6 rounded">
+        <p class="text-yellow-700 font-medium">
+          Existem {{ lowStockProducts.length }} produtos com estoque baixo.
+        </p>
+      </div>
+    </div>
+    }
+
+    <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-white p-4 rounded shadow border border-gray-200">
+        <h2 class="text-lg font-semibold mb-3">Entradas x Saídas</h2>
+        <div style="height: 260px">
+          <canvas id="inputAndOutputChart"></canvas>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded shadow border border-gray-200">
+        <h2 class="text-lg font-semibold mb-3">Estoque Baixo por Produto</h2>
+        <div style="height: 260px">
+          <canvas id="lowStockChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-white rounded shadow p-4">
+        <h2 class="text-lg font-semibold mb-4">Últimas Movimentações</h2>
+
+        <table class="min-w-full divide-y divide-gray-200 text-sm">
           <thead class="bg-gray-50">
             <tr>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Produto
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Categoria
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Quantidade
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Ações
-              </th>
+              <th class="px-4 py-2 text-left font-medium text-gray-500">Produto</th>
+              <th class="px-4 py-2 text-left font-medium text-gray-500">Tipo</th>
+              <th class="px-4 py-2 text-left font-medium text-gray-500">Qtd</th>
+              <th class="px-4 py-2 text-left font-medium text-gray-500">Data</th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
+          <tbody class="divide-y divide-gray-200">
+            @for (mov of recentMovements; track mov.id) {
             <tr>
-              <td class="px-6 py-4"></td>
-              <td class="px-6 py-4"></td>
-              <td class="px-6 py-4"></td>
-              <td class="px-6 py-4 flex gap-2">
-                <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
-                  Editar
-                </button>
-                <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
-                  Excluir
-                </button>
+              <td class="px-4 py-2">{{ mov.product.name }}</td>
+              <td class="px-4 py-2">
+                <span
+                  class="px-2 py-1 rounded text-white"
+                  [ngClass]="{
+                    'bg-green-500': mov.type === 'IN',
+                    'bg-red-500': mov.type === 'OUT'
+                  }"
+                >
+                  {{ mov.type === 'IN' ? 'Entrada' : 'Saída' }}
+                </span>
               </td>
+              <td class="px-4 py-2">{{ mov.quantity }}</td>
+              <td class="px-4 py-2">{{ mov.createdAt | date : 'short' }}</td>
             </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bg-white rounded shadow p-4">
+        <h2 class="text-lg font-semibold mb-4">Produtos com Estoque Baixo</h2>
+
+        <table class="min-w-full divide-y divide-gray-200 text-sm">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-2 text-left font-medium text-gray-500">Produto</th>
+              <th class="px-4 py-2 text-left font-medium text-gray-500">Categoria</th>
+              <th class="px-4 py-2 text-left font-medium text-gray-500">Qtd</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            @for (product of lowStockProducts; track product.id) {
+            <tr>
+              <td class="px-4 py-2">{{ product.name }}</td>
+              <td class="px-4 py-2">{{ product.category }}</td>
+              <td class="px-4 py-2 text-red-500 font-bold">{{ product.quantity }}</td>
+            </tr>
+            }
           </tbody>
         </table>
       </div>
@@ -78,6 +121,7 @@
 
     <button
       class="fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600"
+      (click)="onAddItem()"
     >
       <i class="material-icons">add</i>
     </button>
