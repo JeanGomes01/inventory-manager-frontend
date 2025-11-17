@@ -35,6 +35,7 @@ export class Products implements OnInit {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       description: [''],
+      category: [''],
       quantity: [0, [Validators.required, Validators.min(0)]],
       price: [0, [Validators.required, Validators.min(0)]],
     });
@@ -73,6 +74,7 @@ export class Products implements OnInit {
     this.productForm.patchValue({
       name: product.name,
       description: product.description,
+      category: product.category,
       quantity: product.quantity,
       price: product.price,
     });
