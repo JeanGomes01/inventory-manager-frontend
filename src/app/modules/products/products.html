@@ -67,6 +67,7 @@
       <tr>
         <th class="p-3 text-left">Produto</th>
         <th class="p-3 text-left">Descrição</th>
+        <th class="p-3 text-center">Categoria</th>
         <th class="p-3 text-center">Qtd</th>
         <th class="p-3 text-center">Preço</th>
         <th class="p-3 text-center">Valor Total</th>
@@ -83,6 +84,7 @@
       >
         <td class="p-3">{{ product.name }}</td>
         <td class="p-3">{{ product.description || '-' }}</td>
+        <td class="p-3 text-center">{{ product.category || '-' }}</td>
         <td class="p-3 text-center font-semibold">{{ product.quantity }}</td>
         <td class="p-3 text-center">
           {{ product.price | currency : 'BRL' : 'symbol' : '1.2-2' }}
@@ -92,7 +94,6 @@
         </td>
         <td class="p-3 text-center">
           <div class="flex justify-center gap-2">
-            <!-- Se NÃO está editando este produto → mostra os botões normais -->
             <ng-container *ngIf="editingProductId !== product.id; else editingMode">
               <button
                 (click)="updateProduct(product)"
@@ -115,7 +116,6 @@
               </button>
             </ng-container>
 
-            <!-- MODO DE EDIÇÃO (somente para a linha atual) -->
             <ng-template #editingMode>
               <button
                 (click)="saveProduct()"
