@@ -20,7 +20,7 @@ export class ProductsService {
   }
 
   updateProduct(id: number, product: Partial<IProduct>): Observable<IProduct> {
-    return this.http.put<IProduct>(`${this.apiUrl}/${id}`, product);
+    return this.http.patch<IProduct>(`${this.apiUrl}/${id}`, product);
   }
 
   deleteProduct(id: number): Observable<IProduct> {

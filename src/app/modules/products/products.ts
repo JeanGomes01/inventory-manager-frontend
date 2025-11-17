@@ -14,6 +14,8 @@ export class Products implements OnInit {
   products: IProduct[] = [];
   productForm!: FormGroup;
 
+  editingProductId: number | null = null;
+
   highlightedProductId: number | null = null;
 
   totalProducts = 0;
@@ -65,6 +67,56 @@ export class Products implements OnInit {
     });
   }
 
+  updateProduct(product: IProduct) {
+    this.editingProductId = product.id;
+
+    this.productForm.patchValue({
+      name: product.name,
+      description: product.description,
+      quantity: product.quantity,
+      price: product.price,
+    });
+
+    console.log('✏️ Editando produto:', product);
+  }
+
+  saveProduct() {
+    if (!this.editingProductId || this.productForm.invalid) return;
+
+    const updatedData = {
+      ...this.productForm.value,
+      price: Number(this.productForm.value.price),
+      quantity: Number(this.productForm.value.quantity),
+    };
+
+    this.productsService.updateProduct(this.editingProductId, updatedData).subscribe({
+      next: () => {
+        console.log('✅ Produto atualizado com sucesso');
+        this.loadProducts();
+        this.editingProductId = null;
+        this.productForm.reset({ quantity: 0, price: 0 });
+      },
+      error: (err) => console.error('Erro ao atualizar produto', err),
+    });
+  }
+
+  cancelEdit() {
+    this.editingProductId = null;
+    this.productForm.reset({
+      name: '',
+      description: '',
+      quantity: null,
+      price: null,
+    });
+  }
+
+  deleteProduct(id: number) {
+    this.productsService.deleteProduct(id).subscribe({
+      next: () => this.loadProducts(),
+      error: (err) => console.error(err),
+    });
+  }
+
   loadProducts() {
     console.log('📦 Chamando loadProducts...');
     this.productsService.getProducts().subscribe({
@@ -87,13 +139,6 @@ export class Products implements OnInit {
 
   isLowStock(product: IProduct): boolean {
     return product.quantity < 5;
-  }
-
-  deleteProduct(id: number) {
-    this.productsService.deleteProduct(id).subscribe({
-      next: () => this.loadProducts(),
-      error: (err) => console.error(err),
-    });
   }
 
   updatePriceDisplay(value: number) {

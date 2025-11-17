@@ -92,24 +92,45 @@
         </td>
         <td class="p-3 text-center">
           <div class="flex justify-center gap-2">
-            <button
-              class="btn bg-blue-500 hover:bg-blue-600 text-white border-none px-4 py-2 text-sm rounded-md shadow-sm hover:shadow-md transition-all"
-            >
-              Editar
-            </button>
+            <!-- Se NÃO está editando este produto → mostra os botões normais -->
+            <ng-container *ngIf="editingProductId !== product.id; else editingMode">
+              <button
+                (click)="updateProduct(product)"
+                class="btn bg-blue-500 hover:bg-blue-600 text-white border-none px-4 py-2 text-sm rounded-md shadow-sm hover:shadow-md transition-all"
+              >
+                Editar
+              </button>
 
-            <button
-              class="btn bg-yellow-500 hover:bg-yellow-600 text-white border-none px-4 py-2 text-sm rounded-md shadow-sm hover:shadow-md transition-all"
-            >
-              Movimentar
-            </button>
+              <button
+                class="btn bg-yellow-500 hover:bg-yellow-600 text-white border-none px-4 py-2 text-sm rounded-md shadow-sm hover:shadow-md transition-all"
+              >
+                Movimentar
+              </button>
 
-            <button
-              (click)="deleteProduct(product.id)"
-              class="btn bg-red-500 hover:bg-red-600 text-white border-none px-4 py-2 text-sm rounded-md shadow-sm hover:shadow-md transition-all"
-            >
-              Excluir
-            </button>
+              <button
+                (click)="deleteProduct(product.id)"
+                class="btn bg-red-500 hover:bg-red-600 text-white border-none px-4 py-2 text-sm rounded-md shadow-sm hover:shadow-md transition-all"
+              >
+                Excluir
+              </button>
+            </ng-container>
+
+            <!-- MODO DE EDIÇÃO (somente para a linha atual) -->
+            <ng-template #editingMode>
+              <button
+                (click)="saveProduct()"
+                class="btn bg-green-600 hover:bg-green-700 text-white border-none px-4 py-2 text-sm rounded-md shadow-sm hover:shadow-md transition-all"
+              >
+                Salvar
+              </button>
+
+              <button
+                (click)="cancelEdit()"
+                class="btn bg-gray-400 hover:bg-gray-500 text-white border-none px-4 py-2 text-sm rounded-md shadow-sm hover:shadow-md transition-all"
+              >
+                Cancelar
+              </button>
+            </ng-template>
           </div>
         </td>
       </tr>
