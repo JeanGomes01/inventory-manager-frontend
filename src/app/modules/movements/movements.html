@@ -1,7 +1,33 @@
 <div class="p-6">
-  <h2 class="text-2xl font-bold mb-4">Movements</h2>
+  <h2 class="text-2xl font-bold mb-4">Movimentações</h2>
 
-  <!-- Tabela de Movimentações -->
+  <div class="grid grid-cols-3 gap-4 mb-6">
+    <div class="bg-gray-100 rounded-lg p-4 text-center shadow">
+      <h3 class="text-gray-500 text-sm">Total de Produtos</h3>
+      <p class="text-2xl font-bold">{{ totalProducts }}</p>
+    </div>
+    <div class="bg-gray-100 rounded-lg p-4 text-center shadow">
+      <h3 class="text-gray-500 text-sm">Quantidade Total</h3>
+      <p class="text-2xl font-bold">{{ totalQuantity }}</p>
+    </div>
+    <div class="bg-gray-100 rounded-lg p-4 text-center shadow">
+      <h3 class="text-gray-500 text-sm">Valor Total</h3>
+      <p class="text-2xl font-bold">
+        <span>R$</span>
+        <span class="ml-1">{{ totalValue | number : '1.2-2' }}</span>
+      </p>
+    </div>
+
+    <select
+      formControlName="type"
+      class="border p-2 rounded-md col-span-1 focus:ring-2 focus:ring-blue-400 outline-none"
+    >
+      <option value="" disabled selected>Selecione o tipo</option>
+      <option value="entrada">Entrada</option>
+      <option value="saida">Saída</option>
+    </select>
+  </div>
+
   <table class="table-auto w-full border border-gray-300 rounded-lg shadow">
     <thead class="bg-gray-200">
       <tr>
@@ -11,9 +37,18 @@
         <th class="p-3 text-center">Data/Hora</th>
       </tr>
     </thead>
+
     <tbody>
-      <tr *ngFor="let movement of movements">
+      @if (movements.length === 0) {
+      <tr>
+        <td colspan="4" class="p-6 text-center text-gray-500 italic">
+          Nenhuma movimentação encontrado.
+        </td>
+      </tr>
+      } @for (movement of movements; track movement.id) {
+      <tr>
         <td class="p-3">{{ movement.productName || movement.productId }}</td>
+
         <td
           class="p-3 text-left"
           [ngClass]="{
@@ -23,9 +58,11 @@
         >
           {{ movement.type }}
         </td>
+
         <td class="p-3 text-center">{{ movement.quantity }}</td>
         <td class="p-3 text-center">{{ formatDate(movement.createdAt) }}</td>
       </tr>
+      }
     </tbody>
   </table>
 </div>

@@ -18,16 +18,12 @@
         <span class="material-icons">dashboard</span>
         <span [hidden]="!isOpen">Dashboard</span>
       </a>
-      <a href="products" class="flex items-center gap-3 p-2 rounded hover:bg-base-100">
-        <span class="material-icons">inventory_2</span>
-        <span [hidden]="!isOpen">Products</span>
-      </a>
 
       <a href="movements" class="flex items-center gap-3 p-2 rounded hover:bg-base-100">
         <span class="material-icons">sync_alt</span>
 
         <span class="flex items-center gap-2 relative" [hidden]="!isOpen">
-          Movements @if (movementsCount > 0) {
+          Movimentações @if (movementsCount > 0) {
           <span
             class="bg-orange-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full"
           >
@@ -37,18 +33,24 @@
         </span>
       </a>
 
-      <a href="#" class="flex items-center gap-3 p-2 rounded hover:bg-base-100">
+      <a href="products" class="flex items-center gap-3 p-2 rounded hover:bg-base-100">
+        <span class="material-icons">inventory_2</span>
+        <span [hidden]="!isOpen">Produtos</span>
+      </a>
+
+      <!-- <a href="#" class="flex items-center gap-3 p-2 rounded hover:bg-base-100">
         <span class="material-icons">store</span>
         <span [hidden]="!isOpen">Estoque</span>
-      </a>
-      <a href="#" class="flex items-center gap-3 p-2 rounded hover:bg-base-100">
+      </a> -->
+
+      <!-- <a href="#" class="flex items-center gap-3 p-2 rounded hover:bg-base-100">
         <span class="material-icons">people</span>
         <span [hidden]="!isOpen">Clientes</span>
-      </a>
-      <a href="#" class="flex items-center gap-3 p-2 rounded hover:bg-base-100">
+      </a> -->
+      <!-- <a href="#" class="flex items-center gap-3 p-2 rounded hover:bg-base-100">
         <span class="material-icons">bar_chart</span>
         <span [hidden]="!isOpen">Relatórios</span>
-      </a>
+      </a> -->
     </nav>
   </aside>
 </div>

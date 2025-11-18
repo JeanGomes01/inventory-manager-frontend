@@ -1,21 +1,5 @@
 <div class="p-6">
-  <div class="grid grid-cols-3 gap-4 mb-6">
-    <div class="bg-gray-100 rounded-lg p-4 text-center shadow">
-      <h3 class="text-gray-500 text-sm">Total de Produtos</h3>
-      <p class="text-2xl font-bold">{{ totalProducts }}</p>
-    </div>
-    <div class="bg-gray-100 rounded-lg p-4 text-center shadow">
-      <h3 class="text-gray-500 text-sm">Quantidade Total</h3>
-      <p class="text-2xl font-bold">{{ totalQuantity }}</p>
-    </div>
-    <div class="bg-gray-100 rounded-lg p-4 text-center shadow">
-      <h3 class="text-gray-500 text-sm">Valor Total</h3>
-      <p class="text-2xl font-bold">
-        <span>R$</span>
-        <span class="ml-1">{{ totalValue | number : '1.2-2' }}</span>
-      </p>
-    </div>
-  </div>
+  <h2 class="text-2xl font-bold mb-4">Produtos</h2>
 
   <div class="bg-gray-50 p-6 rounded-lg shadow-inner mb-6">
     <h3 class="text-lg font-semibold mb-4 text-gray-700">Adicionar Produto</h3>
@@ -42,28 +26,28 @@
         class="border p-2 rounded-md col-span-1 focus:ring-2 focus:ring-blue-400 outline-none"
       />
 
-      <input
+      <!-- <input
         type="number"
         placeholder="Qtd"
         formControlName="quantity"
         class="border p-2 rounded-md col-span-1 focus:ring-2 focus:ring-blue-400 outline-none"
-      />
+      /> -->
 
-      <input
+      <!-- <input
         type="text"
         step="0.01"
         placeholder="R$ 0,00"
         formControlName="price"
         (input)="onPriceInput($event)"
         class="border p-2 rounded-md col-span-1 focus:ring-2 focus:ring-blue-400 outline-none"
-      />
+      /> -->
 
       <div class="col-span-4 flex justify-end mt-2">
         <button
           [disabled]="productForm.invalid"
           class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md shadow-sm transition-all"
         >
-          Criar Produto
+          + Adicionar Produto
         </button>
       </div>
     </form>
@@ -75,13 +59,15 @@
         <th class="p-3 text-left">Produto</th>
         <th class="p-3 text-left">Descrição</th>
         <th class="p-3 text-center">Categoria</th>
-        <th class="p-3 text-center">Qtd</th>
+        <!-- <th class="p-3 text-center">Qtd</th>
         <th class="p-3 text-center">Preço</th>
-        <th class="p-3 text-center">Valor Total</th>
+        <th class="p-3 text-center">Valor Total</th> -->
         <th class="p-3 text-center">Ações</th>
       </tr>
     </thead>
+
     <tbody>
+      @if (products.length > 0) {
       <tr
         *ngFor="let product of products"
         [ngClass]="{
@@ -92,13 +78,13 @@
         <td class="p-3">{{ product.name }}</td>
         <td class="p-3">{{ product.description || '-' }}</td>
         <td class="p-3 text-center">{{ product.category || '-' }}</td>
-        <td class="p-3 text-center font-semibold">{{ product.quantity }}</td>
-        <td class="p-3 text-center">
-          {{ product.price | currency : 'BRL' : 'symbol' : '1.2-2' }}
-        </td>
-        <td class="p-3 text-center">
-          {{ product.price * product.quantity | currency : 'BRL' : 'symbol' }}
-        </td>
+        <!-- <td class="p-3 text-center font-semibold">{{ product.quantity }}</td> -->
+        <!-- <td class="p-3 text-center">
+        {{ product.price | currency : 'BRL' : 'symbol' : '1.2-2' }}
+      </td>
+      <td class="p-3 text-center">
+        {{ product.price * product.quantity | currency : 'BRL' : 'symbol' }}
+      </td> -->
         <td class="p-3 text-center">
           <div class="flex justify-center gap-2">
             <ng-container *ngIf="editingProductId !== product.id; else editingMode">
@@ -107,12 +93,6 @@
                 class="btn bg-blue-500 hover:bg-blue-600 text-white border-none px-4 py-2 text-sm rounded-md shadow-sm hover:shadow-md transition-all"
               >
                 Editar
-              </button>
-
-              <button
-                class="btn bg-yellow-500 hover:bg-yellow-600 text-white border-none px-4 py-2 text-sm rounded-md shadow-sm hover:shadow-md transition-all"
-              >
-                Movimentar
               </button>
 
               <button
@@ -141,6 +121,11 @@
           </div>
         </td>
       </tr>
+      } @else {
+      <tr>
+        <td colspan="4" class="p-6 text-center text-gray-500 italic">Nenhum produto encontrado.</td>
+      </tr>
+      }
     </tbody>
   </table>
 </div>

@@ -10,6 +10,10 @@ import { IMovement } from '../../types/movement.interface';
   styleUrl: './movements.css',
 })
 export class Movements {
+  totalProducts = 0;
+  totalQuantity = 0;
+  totalValue = 0;
+
   movements: IMovement[] = [];
 
   constructor(private movementsService: MovementsService) {}
