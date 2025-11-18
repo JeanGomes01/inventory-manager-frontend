@@ -1,15 +1,17 @@
 <div class="p-6">
   <h2 class="text-2xl font-bold mb-4">Movimentações</h2>
 
-  <div class="grid grid-cols-3 gap-4 mb-6">
+  <form [formGroup]="movementForm" class="grid grid-cols-3 gap-4 mb-6">
     <div class="bg-gray-100 rounded-lg p-4 text-center shadow">
       <h3 class="text-gray-500 text-sm">Total de Produtos</h3>
       <p class="text-2xl font-bold">{{ totalProducts }}</p>
     </div>
+
     <div class="bg-gray-100 rounded-lg p-4 text-center shadow">
       <h3 class="text-gray-500 text-sm">Quantidade Total</h3>
       <p class="text-2xl font-bold">{{ totalQuantity }}</p>
     </div>
+
     <div class="bg-gray-100 rounded-lg p-4 text-center shadow">
       <h3 class="text-gray-500 text-sm">Valor Total</h3>
       <p class="text-2xl font-bold">
@@ -18,15 +20,48 @@
       </p>
     </div>
 
+    <input
+      type="text"
+      placeholder="Nome do produto"
+      formControlName="productName"
+      class="border p-2 rounded-md col-span-1"
+    />
+
+    <input
+      type="number"
+      placeholder="Quantidade"
+      formControlName="quantity"
+      class="border p-2 rounded-md col-span-1"
+    />
+
+    <input
+      type="text"
+      placeholder="R$ 0,00"
+      formControlName="price"
+      (input)="onPriceInput($event)"
+      class="border p-2 rounded-md col-span-1 text-right font-medium"
+    />
+
     <select
       formControlName="type"
-      class="border p-2 rounded-md col-span-1 focus:ring-2 focus:ring-blue-400 outline-none"
+      class="border p-2 rounded-md w-32 focus:ring-2 focus:ring-blue-400 outline-none"
     >
       <option value="" disabled selected>Selecione o tipo</option>
       <option value="entrada">Entrada</option>
       <option value="saida">Saída</option>
     </select>
-  </div>
+
+    <div class="col-span-3 flex justify-end mt-2">
+      <button
+        type="button"
+        (click)="createMovement()"
+        [disabled]="movementForm.invalid"
+        class="bg-green-600 cursor-pointer text-white px-4 py-2 rounded-md shadow hover:bg-green-700 active:scale-95 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed"
+      >
+        Adicionar Movimentação
+      </button>
+    </div>
+  </form>
 
   <table class="table-auto w-full border border-gray-300 rounded-lg shadow">
     <thead class="bg-gray-200">
@@ -34,6 +69,8 @@
         <th class="p-3 text-left">Produto</th>
         <th class="p-3 text-left">Tipo</th>
         <th class="p-3 text-center">Quantidade</th>
+        <th class="p-3 text-center">Preço</th>
+        <th class="p-3 text-center">Valor Total</th>
         <th class="p-3 text-center">Data/Hora</th>
       </tr>
     </thead>
@@ -41,8 +78,8 @@
     <tbody>
       @if (movements.length === 0) {
       <tr>
-        <td colspan="4" class="p-6 text-center text-gray-500 italic">
-          Nenhuma movimentação encontrado.
+        <td colspan="6" class="p-6 text-center text-gray-500 italic">
+          Nenhuma movimentação encontrada.
         </td>
       </tr>
       } @for (movement of movements; track movement.id) {
@@ -50,7 +87,7 @@
         <td class="p-3">{{ movement.productName || movement.productId }}</td>
 
         <td
-          class="p-3 text-left"
+          class="p-3"
           [ngClass]="{
             'text-green-600': movement.type === 'entrada',
             'text-red-600': movement.type === 'saida'
@@ -60,6 +97,15 @@
         </td>
 
         <td class="p-3 text-center">{{ movement.quantity }}</td>
+
+        <td class="p-3 text-center">
+          {{ movement.price | number : '1.2-2' }}
+        </td>
+
+        <td class="p-3 text-center">
+          {{ movement.quantity * movement.price | number : '1.2-2' }}
+        </td>
+
         <td class="p-3 text-center">{{ formatDate(movement.createdAt) }}</td>
       </tr>
       }
