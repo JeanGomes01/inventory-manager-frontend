@@ -20,12 +20,13 @@
       </p>
     </div>
 
-    <input
-      type="text"
-      placeholder="Nome do produto"
-      formControlName="productName"
-      class="border p-2 rounded-md col-span-1"
-    />
+    <select formControlName="productName" class="border p-2 rounded-md col-span-1">
+      <option value="" disabled selected>Selecione um produto</option>
+
+      @for (product of products; track product.id) {
+      <option [value]="product.name">{{ product.name }}</option>
+      }
+    </select>
 
     <input
       type="number"

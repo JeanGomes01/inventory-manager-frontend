@@ -2,7 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MovementsService } from '../../services/movements.service';
+import { ProductsService } from '../../services/products.service';
 import { IMovement } from '../../types/movement.interface';
+import { IProduct } from '../../types/product.interface';
 
 @Component({
   selector: 'app-movements',
@@ -15,10 +17,16 @@ export class Movements implements OnInit {
   totalQuantity = 0;
   totalValue = 0;
 
+  products: IProduct[] = [];
+
   movements: IMovement[] = [];
   movementForm: FormGroup;
 
-  constructor(private movementsService: MovementsService, private fb: FormBuilder) {
+  constructor(
+    private productsService: ProductsService,
+    private movementsService: MovementsService,
+    private fb: FormBuilder
+  ) {
     this.movementForm = this.fb.group({
       userId: [1, Validators.required],
       productName: ['', Validators.required],
@@ -30,6 +38,7 @@ export class Movements implements OnInit {
 
   ngOnInit(): void {
     this.loadMovements();
+    this.loadProducts();
   }
 
   onPriceInput(event: Event) {
@@ -56,6 +65,12 @@ export class Movements implements OnInit {
     this.movementsService.getMovements().subscribe((data) => {
       this.movements = data;
       this.calculateTotals();
+    });
+  }
+
+  loadProducts() {
+    this.productsService.getProducts().subscribe((data) => {
+      this.products = data;
     });
   }
 

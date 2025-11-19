@@ -41,6 +41,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
   loadDashboard() {
     this.productsService.getProducts().subscribe((products) => {
+      console.log('Products from API:', products);
       this.totalProducts = products.length;
       this.lowStockProducts = products.filter((p: any) => p.quantity < 5);
       this.lowStockCount = this.lowStockProducts.length;
