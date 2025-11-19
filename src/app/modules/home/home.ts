@@ -49,6 +49,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     });
 
     this.movementsService.getMovements().subscribe((movements) => {
+      console.log('Movements from API:', movements);
       this.recentMovements = movements.slice(0, 5);
       this.recentMovementsCount = movements.length;
 
