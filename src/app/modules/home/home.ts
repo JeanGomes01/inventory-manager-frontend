@@ -21,6 +21,17 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   recentMovements: any[] = [];
   lowStockProducts: any[] = [];
 
+  loading = true;
+  errorLoading = false;
+
+  loadingMovements = true;
+  loadingLowStock = true;
+
+  loadingChart = true;
+
+  productsEmpty = false;
+  movementsEmpty = false;
+
   constructor(
     private productsService: ProductsService,
     private movementsService: MovementsService
@@ -40,21 +51,42 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   }
 
   loadDashboard() {
-    this.productsService.getProducts().subscribe((products) => {
-      console.log('Products from API:', products);
-      this.totalProducts = products.length;
-      this.lowStockProducts = products.filter((p: any) => p.quantity < 5);
-      this.lowStockCount = this.lowStockProducts.length;
+    this.errorLoading = false;
 
-      this.updateLowStockChart();
+    this.movementsService.getMovements().subscribe({
+      next: (movements) => {
+        this.recentMovements = movements.slice(0, 5);
+        this.recentMovementsCount = movements.length;
+
+        this.movementsEmpty = movements.length === 0;
+
+        this.updateDoughnutChart(movements);
+
+        this.loadingMovements = false;
+        this.loadingChart = false;
+      },
+      error: () => {
+        this.errorLoading = true;
+        this.loadingMovements = false;
+        this.loadingChart = false;
+      },
     });
 
-    this.movementsService.getMovements().subscribe((movements) => {
-      console.log('Movements from API:', movements);
-      this.recentMovements = movements.slice(0, 5);
-      this.recentMovementsCount = movements.length;
+    this.productsService.getProducts().subscribe({
+      next: (products) => {
+        this.totalProducts = products.length;
+        this.productsEmpty = products.length === 0;
 
-      this.updateDoughnutChart(movements);
+        this.lowStockProducts = products.filter((p: any) => p.quantity < 5);
+        this.lowStockCount = this.lowStockProducts.length;
+
+        this.updateLowStockChart();
+        this.loadingLowStock = false;
+      },
+      error: () => {
+        this.errorLoading = true;
+        this.loadingLowStock = false;
+      },
     });
   }
 
@@ -80,7 +112,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         labels: ['Entradas', 'Saídas'],
         datasets: [
           {
-            data: [350, 120],
+            data: [0, 0],
             backgroundColor: ['#22c55e', '#ef4444'],
           },
         ],

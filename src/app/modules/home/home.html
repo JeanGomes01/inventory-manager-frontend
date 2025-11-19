@@ -45,8 +45,16 @@
     <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div class="bg-white p-4 rounded shadow border border-gray-200">
         <h2 class="text-lg font-semibold mb-3">Entradas x Saídas</h2>
-        <div style="height: 260px">
-          <canvas id="inputAndOutputChart"></canvas>
+        <div class="relative" style="height: 260px">
+          @if (loadingChart) {
+          <div class="absolute inset-0 flex items-center justify-center bg-white/70 rounded">
+            <div
+              class="animate-spin h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full"
+            ></div>
+          </div>
+          }
+
+          <canvas id="inputAndOutputChart" [class.opacity-0]="loadingChart"></canvas>
         </div>
       </div>
 
@@ -59,9 +67,26 @@
     </div>
 
     <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- 🔵 ÚLTIMAS MOVIMENTAÇÕES -->
       <div class="bg-white rounded shadow p-4">
         <h2 class="text-lg font-semibold mb-4">Últimas Movimentações</h2>
 
+        <!-- SPINNER -->
+        @if (loadingMovements) {
+        <div class="w-full flex justify-center py-6">
+          <div
+            class="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full"
+          ></div>
+        </div>
+        }
+
+        <!-- NENHUM DADO -->
+        @if (!loadingMovements && recentMovements.length === 0 && !errorLoading) {
+        <p class="text-gray-500 italic py-4">Nenhum resultado encontrado.</p>
+        }
+
+        <!-- TABELA -->
+        @if (!loadingMovements && recentMovements.length > 0 && !errorLoading) {
         <table class="min-w-full divide-y divide-gray-200 text-sm">
           <thead class="bg-gray-50">
             <tr>
@@ -92,11 +117,29 @@
             }
           </tbody>
         </table>
+        }
       </div>
 
+      <!-- 🟡 ESTOQUE BAIXO -->
       <div class="bg-white rounded shadow p-4">
         <h2 class="text-lg font-semibold mb-4">Produtos com Estoque Baixo</h2>
 
+        <!-- SPINNER -->
+        @if (loadingLowStock) {
+        <div class="w-full flex justify-center py-6">
+          <div
+            class="animate-spin h-8 w-8 border-4 border-yellow-500 border-t-transparent rounded-full"
+          ></div>
+        </div>
+        }
+
+        <!-- NENHUM DADO -->
+        @if (!loadingLowStock && lowStockProducts.length === 0 && !errorLoading) {
+        <p class="text-gray-500 italic py-4">Nenhum resultado encontrado.</p>
+        }
+
+        <!-- TABELA -->
+        @if (!loadingLowStock && lowStockProducts.length > 0 && !errorLoading) {
         <table class="min-w-full divide-y divide-gray-200 text-sm">
           <thead class="bg-gray-50">
             <tr>
@@ -115,6 +158,7 @@
             }
           </tbody>
         </table>
+        }
       </div>
     </div>
 
@@ -124,5 +168,13 @@
     >
       <i class="material-icons text-3xl">add</i>
     </button>
+
+    @if (errorLoading) {
+    <div class="px-6">
+      <div class="bg-red-100 border-l-4 border-red-500 p-4 mb-6 rounded">
+        <p class="text-red-700 font-medium">Erro ao carregar os dados, Tente novamente.</p>
+      </div>
+    </div>
+    }
   </div>
 </div>
