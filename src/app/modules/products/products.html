@@ -59,9 +59,6 @@
         <th class="p-3 text-left">Produto</th>
         <th class="p-3 text-left">Descrição</th>
         <th class="p-3 text-center">Categoria</th>
-        <!-- <th class="p-3 text-center">Qtd</th>
-        <th class="p-3 text-center">Preço</th>
-        <th class="p-3 text-center">Valor Total</th> -->
         <th class="p-3 text-center">Ações</th>
       </tr>
     </thead>
@@ -78,13 +75,7 @@
         <td class="p-3">{{ product.name }}</td>
         <td class="p-3">{{ product.description || '-' }}</td>
         <td class="p-3 text-center">{{ product.category || '-' }}</td>
-        <!-- <td class="p-3 text-center font-semibold">{{ product.quantity }}</td> -->
-        <!-- <td class="p-3 text-center">
-        {{ product.price | currency : 'BRL' : 'symbol' : '1.2-2' }}
-      </td>
-      <td class="p-3 text-center">
-        {{ product.price * product.quantity | currency : 'BRL' : 'symbol' }}
-      </td> -->
+
         <td class="p-3 text-center">
           <div class="flex justify-center gap-2">
             <ng-container *ngIf="editingProductId !== product.id; else editingMode">

@@ -36,9 +36,6 @@ export class Products implements OnInit {
       name: ['', Validators.required],
       description: [''],
       category: [''],
-      quantity: [0, [Validators.required, Validators.min(0)]],
-      price: [0, [Validators.required, Validators.min(0)]],
-      type: ['', Validators.required],
     });
   }
 
