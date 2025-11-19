@@ -20,9 +20,11 @@
       </p>
     </div>
 
-    <select formControlName="productName" class="border p-2 rounded-md col-span-1">
+    <select
+      formControlName="productName"
+      class="col-span-1 w-full px-3 py-2 rounded-lg border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-300 outline-none transition"
+    >
       <option value="" disabled selected>Selecione um produto</option>
-
       @for (product of products; track product.id) {
       <option [value]="product.name">{{ product.name }}</option>
       }
@@ -32,7 +34,7 @@
       type="number"
       placeholder="Quantidade"
       formControlName="quantity"
-      class="border p-2 rounded-md col-span-1"
+      class="col-span-1 w-full px-3 py-2 rounded-lg border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-300 outline-none transition"
     />
 
     <input
@@ -40,12 +42,12 @@
       placeholder="R$ 0,00"
       formControlName="price"
       (input)="onPriceInput($event)"
-      class="border p-2 rounded-md col-span-1 text-right font-medium"
+      class="col-span-1 w-full px-3 py-2 rounded-lg border border-gray-300 bg-white shadow-sm text-right font-medium focus:border-indigo-500 focus:ring-2 focus:ring-indigo-300 outline-none transition"
     />
 
     <select
       formControlName="type"
-      class="border p-2 rounded-md w-32 focus:ring-2 focus:ring-blue-400 outline-none"
+      class="col-span-1 w-full px-3 py-2 rounded-lg border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-300 outline-none transition"
     >
       <option value="" disabled selected>Selecione o tipo</option>
       <option value="entrada">Entrada</option>

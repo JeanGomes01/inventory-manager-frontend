@@ -31,7 +31,7 @@ export class Movements implements OnInit {
       userId: [1, Validators.required],
       productName: ['', Validators.required],
       type: ['', Validators.required],
-      quantity: [1, [Validators.required, Validators.min(1)]],
+      quantity: [null, [(Validators.required, Validators.min(1))]],
       price: [0, [Validators.required, Validators.min(0)]],
     });
   }
@@ -105,8 +105,8 @@ export class Movements implements OnInit {
       next: () => {
         this.movementForm.reset({
           userId: 1,
-          quantity: 1,
-          price: 0,
+          quantity: null,
+          price: null,
         });
 
         this.loadMovements();
