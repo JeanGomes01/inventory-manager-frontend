@@ -76,26 +76,31 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       next: (products) => {
         console.log('📥 Produtos recebidos:', products);
 
-        this.totalProducts = products.length;
-        this.productsEmpty = products.length === 0;
+        // ✅ Normaliza categoria para string
+        const normalizedProducts = products.map((p: any) => ({
+          ...p,
+          category: p.category?.name || p.category || '-',
+        }));
 
-        this.lowStockProducts = products
-          .filter((p: any) => {
-            console.log('🔎 Verificando quantidade:', p.name, '->', p.quantity);
-            return p.quantity < 5;
-          })
+        this.totalProducts = normalizedProducts.length;
+        this.productsEmpty = normalizedProducts.length === 0;
+
+        // ✅ Estoque baixo
+        this.lowStockProducts = normalizedProducts
+          .filter((p: any) => p.quantity < 5)
           .map((p: any) => ({
             id: p.id,
             name: p.name,
             quantity: p.quantity,
-            category: p.category?.name ?? '-',
+            category: p.category,
           }));
 
         this.lowStockCount = this.lowStockProducts.length;
 
+        // ✅ Contagem por categoria (agora funciona)
         const categoryCount: any = {};
 
-        products.forEach((product: any) => {
+        normalizedProducts.forEach((product: any) => {
           if (!categoryCount[product.category]) {
             categoryCount[product.category] = 0;
           }
