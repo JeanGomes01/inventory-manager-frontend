@@ -68,6 +68,23 @@ export class Movements implements OnInit {
     });
   }
 
+  clearMovements() {
+    const confirmClear = confirm('Tem certeza que deseja limpar todas as movimentações?');
+
+    if (!confirmClear) return;
+
+    this.movementsService.clearMovements().subscribe({
+      next: () => {
+        this.movements = [];
+        this.calculateTotals();
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Erro ao limpar movimentações');
+      },
+    });
+  }
+
   loadProducts() {
     this.productsService.getProducts().subscribe((data) => {
       this.products = data;

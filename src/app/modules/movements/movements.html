@@ -54,7 +54,7 @@
       <option value="saida">Saída</option>
     </select>
 
-    <div class="col-span-3 flex justify-end mt-2">
+    <div class="col-span-3 flex justify-end mt-4 gap-3">
       <button
         type="button"
         (click)="createMovement()"
@@ -62,6 +62,14 @@
         class="bg-green-600 cursor-pointer text-white px-4 py-2 rounded-md shadow hover:bg-green-700 active:scale-95 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed"
       >
         Adicionar Movimentação
+      </button>
+
+      <button
+        type="button"
+        (click)="clearMovements()"
+        class="bg-red-600 text-white px-4 py-2 rounded-md shadow hover:bg-red-700 active:scale-95 transition-all"
+      >
+        Limpar Movimentações
       </button>
     </div>
   </form>
