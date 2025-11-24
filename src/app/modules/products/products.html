@@ -26,12 +26,12 @@
         class="border p-2 rounded-md col-span-1 focus:ring-2 focus:ring-blue-400 outline-none"
       />
 
-      <!-- <input
+      <input
         type="number"
         placeholder="Qtd"
         formControlName="quantity"
         class="border p-2 rounded-md col-span-1 focus:ring-2 focus:ring-blue-400 outline-none"
-      /> -->
+      />
 
       <!-- <input
         type="text"
@@ -59,6 +59,7 @@
         <th class="p-3 text-left">Produto</th>
         <th class="p-3 text-left">Descrição</th>
         <th class="p-3 text-center">Categoria</th>
+        <th class="p-3 text-center">Quantity</th>
         <th class="p-3 text-center">Ações</th>
       </tr>
     </thead>
@@ -74,8 +75,10 @@
       >
         <td class="p-3">{{ product.name }}</td>
         <td class="p-3">{{ product.description || '-' }}</td>
-        <td class="p-3 text-center">{{ product.category || '-' }}</td>
-
+        <td class="p-3 text-center">
+          {{ product.category }}
+        </td>
+        <td class="p-3 text-center">{{ product.quantity || '-' }}</td>
         <td class="p-3 text-center">
           <div class="flex justify-center gap-2">
             <ng-container *ngIf="editingProductId !== product.id; else editingMode">

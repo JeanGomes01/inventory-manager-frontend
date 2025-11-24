@@ -67,26 +67,18 @@
     </div>
 
     <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- 🔵 ÚLTIMAS MOVIMENTAÇÕES -->
       <div class="bg-white rounded shadow p-4">
         <h2 class="text-lg font-semibold mb-4">Últimas Movimentações</h2>
 
-        <!-- SPINNER -->
         @if (loadingMovements) {
         <div class="w-full flex justify-center py-6">
           <div
             class="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full"
           ></div>
         </div>
-        }
-
-        <!-- NENHUM DADO -->
-        @if (!loadingMovements && recentMovements.length === 0 && !errorLoading) {
+        } @if (!loadingMovements && recentMovements.length === 0 && !errorLoading) {
         <p class="text-gray-500 italic py-4">Nenhum resultado encontrado.</p>
-        }
-
-        <!-- TABELA -->
-        @if (!loadingMovements && recentMovements.length > 0 && !errorLoading) {
+        } @if (!loadingMovements && recentMovements.length > 0 && !errorLoading) {
         <table class="min-w-full divide-y divide-gray-200 text-sm">
           <thead class="bg-gray-50">
             <tr>
@@ -120,26 +112,18 @@
         }
       </div>
 
-      <!-- 🟡 ESTOQUE BAIXO -->
       <div class="bg-white rounded shadow p-4">
         <h2 class="text-lg font-semibold mb-4">Produtos com Estoque Baixo</h2>
 
-        <!-- SPINNER -->
         @if (loadingLowStock) {
         <div class="w-full flex justify-center py-6">
           <div
             class="animate-spin h-8 w-8 border-4 border-yellow-500 border-t-transparent rounded-full"
           ></div>
         </div>
-        }
-
-        <!-- NENHUM DADO -->
-        @if (!loadingLowStock && lowStockProducts.length === 0 && !errorLoading) {
+        } @if (!loadingLowStock && lowStockProducts.length === 0 && !errorLoading) {
         <p class="text-gray-500 italic py-4">Nenhum resultado encontrado.</p>
-        }
-
-        <!-- TABELA -->
-        @if (!loadingLowStock && lowStockProducts.length > 0 && !errorLoading) {
+        } @if (!loadingLowStock && lowStockProducts.length > 0 && !errorLoading) {
         <table class="min-w-full divide-y divide-gray-200 text-sm">
           <thead class="bg-gray-50">
             <tr>

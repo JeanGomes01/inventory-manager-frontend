@@ -36,6 +36,7 @@ export class Products implements OnInit {
       name: ['', Validators.required],
       description: [''],
       category: [''],
+      quantity: [0, [Validators.required, Validators.min(0)]],
     });
   }
 
@@ -118,12 +119,15 @@ export class Products implements OnInit {
   }
 
   loadProducts() {
-    console.log('📦 Chamando loadProducts...');
     this.productsService.getProducts().subscribe({
-      next: (response) => {
-        console.log('📥 Produtos recebidos:', response);
-        this.products = response;
-        this.calculateTotals();
+      next: (response: any[]) => {
+        this.products = response.map((p) => ({
+          ...p,
+          category: p.category?.name || p.category || '-',
+          quantity: p.quantity ?? 0,
+        }));
+
+        this.calculateTotals(); // 👈 ADICIONE ISSO
       },
     });
   }

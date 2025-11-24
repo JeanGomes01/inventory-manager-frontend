@@ -74,11 +74,35 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
     this.productsService.getProducts().subscribe({
       next: (products) => {
+        console.log('📥 Produtos recebidos:', products);
+
         this.totalProducts = products.length;
         this.productsEmpty = products.length === 0;
 
-        this.lowStockProducts = products.filter((p: any) => p.quantity < 5);
+        this.lowStockProducts = products
+          .filter((p: any) => {
+            console.log('🔎 Verificando quantidade:', p.name, '->', p.quantity);
+            return p.quantity < 5;
+          })
+          .map((p: any) => ({
+            id: p.id,
+            name: p.name,
+            quantity: p.quantity,
+            category: p.category?.name ?? '-',
+          }));
+
         this.lowStockCount = this.lowStockProducts.length;
+
+        const categoryCount: any = {};
+
+        products.forEach((product: any) => {
+          if (!categoryCount[product.category]) {
+            categoryCount[product.category] = 0;
+          }
+          categoryCount[product.category]++;
+        });
+
+        console.log('📦 Contagem por categoria:', categoryCount);
 
         this.updateLowStockChart();
         this.loadingLowStock = false;
