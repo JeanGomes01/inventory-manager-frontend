@@ -19,7 +19,13 @@
         <span [hidden]="!isOpen">Dashboard</span>
       </a>
 
-      <a href="movements" class="flex items-center gap-3 p-2 rounded hover:bg-base-100">
+      <a
+        [routerLink]="hasProducts ? '/movements' : null"
+        [class.opacity-50]="!hasProducts"
+        [class.pointer-events-none]="!hasProducts"
+        [ngClass]="{ 'hover:bg-base-100': hasProducts }"
+        class="flex items-center gap-3 p-2 rounded"
+      >
         <span class="material-icons">sync_alt</span>
 
         <span class="flex items-center gap-2 relative" [hidden]="!isOpen">

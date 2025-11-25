@@ -23,14 +23,6 @@ export class MovementsService {
     );
   }
 
-  clearMovements() {
-    return this.http.delete(`${this.apiUrl}/movements`);
-  }
-
-  deleteMovement(id: number): Observable<IMovement> {
-    return this.http.delete<IMovement>(`${this.apiUrl}/${id}`);
-  }
-
   deleteAllMovements(): Observable<IMovement[]> {
     return this.http.delete<IMovement[]>(this.apiUrl);
   }

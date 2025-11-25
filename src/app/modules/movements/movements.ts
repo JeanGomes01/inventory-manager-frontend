@@ -79,7 +79,7 @@ export class Movements implements OnInit {
 
     if (!confirmClear) return;
 
-    this.movementsService.clearMovements().subscribe({
+    this.movementsService.deleteAllMovements().subscribe({
       next: () => {
         this.movements = [];
         this.calculateTotals();
