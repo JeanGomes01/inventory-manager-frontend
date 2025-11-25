@@ -22,6 +22,10 @@ export class Movements implements OnInit {
   movements: IMovement[] = [];
   movementForm: FormGroup;
 
+  searchTerm = '';
+
+  allMovements: IMovement[] = [];
+
   constructor(
     private productsService: ProductsService,
     private movementsService: MovementsService,
@@ -64,6 +68,8 @@ export class Movements implements OnInit {
   loadMovements() {
     this.movementsService.getMovements().subscribe((data) => {
       this.movements = data;
+      this.allMovements = [...data];
+
       this.calculateTotals();
     });
   }
@@ -143,5 +149,25 @@ export class Movements implements OnInit {
       style: 'currency',
       currency: 'BRL',
     });
+  }
+
+  onSearchMovements(event: Event) {
+    const query = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.searchTerm = query;
+
+    if (!query) {
+      this.movements = [...this.allMovements];
+      this.calculateTotals();
+      return;
+    }
+
+    this.movements = this.allMovements.filter((movement) => {
+      const productName = movement.productName?.toLowerCase().includes(query) || false;
+      const type = movement.type?.toLowerCase().includes(query) || false;
+
+      return productName || type;
+    });
+
+    this.calculateTotals();
   }
 }

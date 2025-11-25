@@ -20,6 +20,15 @@
       </p>
     </div>
 
+    <div class="flex w-1/3 items-center mb-4 col-span-3">
+      <input
+        type="text"
+        placeholder="Buscar movimentações..."
+        class="border p-3 rounded-md w-full focus:ring-2 focus:ring-blue-400 outline-none"
+        (input)="onSearchMovements($event)"
+      />
+    </div>
+
     <select
       formControlName="productName"
       class="col-span-1 w-full px-3 py-2 rounded-lg border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-300 outline-none transition"
