@@ -22,6 +22,9 @@ export class Products implements OnInit {
   totalQuantity = 0;
   totalValue = 0;
 
+  searchTerm = '';
+  allProducts: IProduct[] = [];
+
   constructor(private productsService: ProductsService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
@@ -121,13 +124,16 @@ export class Products implements OnInit {
   loadProducts() {
     this.productsService.getProducts().subscribe({
       next: (response: any[]) => {
-        this.products = response.map((p) => ({
+        const listProduct = (this.products = response.map((p) => ({
           ...p,
           category: p.category?.name || p.category || '-',
           quantity: p.quantity ?? 0,
-        }));
+        })));
 
-        this.calculateTotals(); // 👈 ADICIONE ISSO
+        this.allProducts = listProduct;
+        this.products = listProduct;
+
+        this.calculateTotals();
       },
     });
   }
@@ -175,5 +181,26 @@ export class Products implements OnInit {
     });
 
     input.value = formatted;
+  }
+
+  onSearch(event: Event) {
+    const query = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.searchTerm = query;
+
+    if (!query) {
+      this.products = [...this.allProducts];
+      this.calculateTotals();
+      return;
+    }
+
+    this.products = this.allProducts.filter((product) => {
+      const name = product.name.toLowerCase().includes(query) || false;
+      const description = product.description?.toLowerCase().includes(query) || false;
+      const category = product.category?.toLowerCase().includes(query) || false;
+
+      return name || description || category;
+    });
+
+    this.calculateTotals();
   }
 }
