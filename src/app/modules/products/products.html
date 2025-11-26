@@ -9,63 +9,62 @@
       (input)="onSearch($event)"
     />
 
-    <!-- No futuro dá pra colocar o botão que abre a modal aqui -->
-    <!-- <button class="bg-green-600 text-white px-4 py-2 rounded-md">
-    + Adicionar Produto
-  </button> -->
+    <app-modal [isOpen]="isModalOpen" (closeModal)="closeModal()">
+      <h2 class="text-xl font-bold mb-6">Adicione um Produto</h2>
+
+      <form [formGroup]="productForm" (ngSubmit)="createProduct()" class="grid grid-cols-4 gap-4">
+        <input
+          type="text"
+          placeholder="Nome"
+          formControlName="name"
+          class="border p-2 rounded-md col-span-2 focus:ring-2 focus:ring-blue-400 outline-none"
+        />
+
+        <input
+          type="text"
+          placeholder="Descrição"
+          formControlName="description"
+          class="border p-2 rounded-md col-span-2 focus:ring-2 focus:ring-blue-400 outline-none"
+        />
+
+        <input
+          type="text"
+          placeholder="Categoria"
+          formControlName="category"
+          class="border p-2 rounded-md col-span-2 focus:ring-2 focus:ring-blue-400 outline-none"
+        />
+
+        <input
+          type="number"
+          placeholder="Qtd"
+          formControlName="quantity"
+          class="border p-2 rounded-md col-span-2 focus:ring-2 focus:ring-blue-400 outline-none"
+        />
+
+        <div class="col-span-4 flex justify-end gap-3 mt-4">
+          <button
+            type="submit"
+            class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition"
+          >
+            Criar Produto
+          </button>
+
+          <button
+            type="button"
+            class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition"
+            (click)="closeModal()"
+          >
+            Fechar
+          </button>
+        </div>
+      </form>
+    </app-modal>
+    <button class="bg-green-600 text-white px-4 py-2 rounded-md" (click)="openModal()">
+      + Adicionar Produto
+    </button>
   </div>
 
-  <div class="bg-gray-50 p-6 rounded-lg shadow-inner mb-6">
-    <h3 class="text-lg font-semibold mb-4 text-gray-700">Adicionar Produto</h3>
-
-    <form [formGroup]="productForm" (ngSubmit)="createProduct()" class="grid grid-cols-4 gap-4">
-      <input
-        type="text"
-        placeholder="Nome"
-        formControlName="name"
-        class="border p-2 rounded-md col-span-1 focus:ring-2 focus:ring-blue-400 outline-none"
-      />
-
-      <input
-        type="text"
-        placeholder="Descrição"
-        formControlName="description"
-        class="border p-2 rounded-md col-span-1 focus:ring-2 focus:ring-blue-400 outline-none"
-      />
-
-      <input
-        type="text"
-        placeholder="Categoria"
-        formControlName="category"
-        class="border p-2 rounded-md col-span-1 focus:ring-2 focus:ring-blue-400 outline-none"
-      />
-
-      <input
-        type="number"
-        placeholder="Qtd"
-        formControlName="quantity"
-        class="border p-2 rounded-md col-span-1 focus:ring-2 focus:ring-blue-400 outline-none"
-      />
-
-      <!-- <input
-        type="text"
-        step="0.01"
-        placeholder="R$ 0,00"
-        formControlName="price"
-        (input)="onPriceInput($event)"
-        class="border p-2 rounded-md col-span-1 focus:ring-2 focus:ring-blue-400 outline-none"
-      /> -->
-
-      <div class="col-span-4 flex justify-end mt-2">
-        <button
-          [disabled]="productForm.invalid"
-          class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md shadow-sm transition-all"
-        >
-          + Adicionar Produto
-        </button>
-      </div>
-    </form>
-  </div>
+  <div class="bg-gray-50 p-6 rounded-lg shadow-inner mb-6"></div>
 
   <table class="table-auto w-full border border-gray-300 rounded-lg shadow">
     <thead class="bg-gray-200">

@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductsService } from '../../services/products.service';
+import { Modal } from '../../shared/modal/modal';
 import { IProduct } from '../../types/product.interface';
 
 @Component({
   selector: 'app-products',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, Modal],
   templateUrl: './products.html',
   styleUrl: './products.css',
 })
@@ -25,7 +26,17 @@ export class Products implements OnInit {
   searchTerm = '';
   allProducts: IProduct[] = [];
 
+  isModalOpen = false;
+
   constructor(private productsService: ProductsService, private fb: FormBuilder) {}
+
+  openModal() {
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
 
   ngOnInit(): void {
     console.log('🧠 ngOnInit disparado!');
