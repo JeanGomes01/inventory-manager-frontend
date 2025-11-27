@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
@@ -23,21 +23,22 @@ export class Sidebar {
     private movementsService: MovementsService,
     private notifications: NotificationsService,
     private productsService: ProductsService
-  ) {}
-
-  ngOnInit() {
-    this.productsService.hasProducts$.subscribe((has) => {
-      this.hasProducts = has;
+  ) {
+    effect(() => {
+      this.hasProducts = this.productsService.hasProducts();
     });
 
-    this.notifications.count$.subscribe((count) => {
-      this.movementsCount = count;
+    effect(() => {
+      this.movementsCount = this.notifications.count();
     });
 
-    this.movementsService.getMovements().subscribe((movements) => {
+    effect(() => {
+      const movements = this.movementsService.movements();
       this.notifications.setCount(movements.length);
     });
   }
+
+  ngOnInit() {}
 
   toggleSidebar() {
     this.isOpen = !this.isOpen;

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
+import { tap } from 'rxjs';
 import { IProduct } from '../types/product.interface';
 
 @Injectable({
@@ -9,54 +9,50 @@ import { IProduct } from '../types/product.interface';
 export class ProductsService {
   apiUrl = 'http://localhost:3000/products';
 
-  // 🔥 estado em tempo real
-  private hasProductsSubject = new BehaviorSubject<boolean>(false);
-  hasProducts$ = this.hasProductsSubject.asObservable();
+  private productsSignal = signal<IProduct[]>([]);
+
+  products = this.productsSignal.asReadonly();
+
+  hasProducts = signal(false);
+  loading = signal(false);
+  error = signal(false);
 
   constructor(private http: HttpClient) {}
 
-  getProducts(): Observable<IProduct[]> {
-    return this.http.get<IProduct[]>(this.apiUrl).pipe(
-      tap((products) => {
-        this.updateHasProducts(products.length > 0);
-      })
-    );
+  loadProducts() {
+    this.http.get<IProduct[]>(this.apiUrl).subscribe((data) => {
+      this.productsSignal.set(data);
+      this.hasProducts.set(data.length > 0);
+    });
   }
 
-  createProduct(product: Partial<IProduct>): Observable<IProduct> {
+  updateLocalProduct(updated: IProduct) {
+    this.productsSignal.update((list) => list.map((p) => (p.id === updated.id ? updated : p)));
+  }
+
+  addProduct(product: IProduct) {
+    this.productsSignal.update((list) => [...list, product]);
+  }
+
+  createProduct(product: Partial<IProduct>) {
     return this.http.post<IProduct>(this.apiUrl, product).pipe(
-      tap(() => {
-        this.updateHasProducts(true);
+      tap((created) => {
+        this.productsSignal.update((list) => [...list, created]);
+        this.hasProducts.set(true);
       })
     );
   }
 
-  updateProduct(id: number, product: Partial<IProduct>): Observable<IProduct> {
-    return this.http.patch<IProduct>(`${this.apiUrl}/${id}`, product);
+  deleteProduct(id: number) {
+    return this.http.delete(`${this.apiUrl}/${id}`).pipe(tap(() => this.loadProducts()));
   }
 
-  deleteProduct(id: number): Observable<IProduct> {
-    return this.http.delete<IProduct>(`${this.apiUrl}/${id}`).pipe(
+  deleteAllProducts() {
+    return this.http.delete(this.apiUrl).pipe(
       tap(() => {
-        // força nova checagem
-        this.refreshProductsState();
+        this.productsSignal.set([]);
+        this.hasProducts.set(false);
       })
     );
-  }
-
-  deleteAllProducts(): Observable<IProduct[]> {
-    return this.http.delete<IProduct[]>(this.apiUrl).pipe(
-      tap(() => {
-        this.updateHasProducts(false);
-      })
-    );
-  }
-
-  private refreshProductsState() {
-    this.getProducts().subscribe();
-  }
-
-  private updateHasProducts(value: boolean) {
-    this.hasProductsSubject.next(value);
   }
 }

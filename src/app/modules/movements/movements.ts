@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MovementsService } from '../../services/movements.service';
 import { ProductsService } from '../../services/products.service';
@@ -38,11 +38,21 @@ export class Movements implements OnInit {
       quantity: [null, [(Validators.required, Validators.min(1))]],
       price: [0, [Validators.required, Validators.min(0)]],
     });
+
+    effect(() => {
+      this.movements = this.movementsService.movements();
+      this.allMovements = [...this.movements];
+      this.calculateTotals();
+    });
+
+    effect(() => {
+      this.products = this.productsService.products();
+    });
   }
 
   ngOnInit(): void {
-    this.loadMovements();
-    this.loadProducts();
+    this.movementsService.loadMovements();
+    this.productsService.loadProducts();
   }
 
   onPriceInput(event: Event) {
@@ -66,12 +76,7 @@ export class Movements implements OnInit {
   }
 
   loadMovements() {
-    this.movementsService.getMovements().subscribe((data) => {
-      this.movements = data;
-      this.allMovements = [...data];
-
-      this.calculateTotals();
-    });
+    this.movementsService.loadMovements();
   }
 
   clearMovements() {
@@ -92,9 +97,7 @@ export class Movements implements OnInit {
   }
 
   loadProducts() {
-    this.productsService.getProducts().subscribe((data) => {
-      this.products = data;
-    });
+    this.productsService.loadProducts();
   }
 
   calculateTotals() {

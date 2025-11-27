@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductsService } from '../../services/products.service';
 import { Modal } from '../../shared/modal/modal';
@@ -12,23 +12,38 @@ import { IProduct } from '../../types/product.interface';
   styleUrl: './products.css',
 })
 export class Products implements OnInit {
-  products: IProduct[] = [];
   productForm!: FormGroup;
 
-  editingProductId: number | null = null;
+  products: IProduct[] = [];
+  allProducts: IProduct[] = [];
 
+  editingProductId: number | null = null;
   highlightedProductId: number | null = null;
+  searchTerm = '';
+
+  isModalOpen = false;
 
   totalProducts = 0;
   totalQuantity = 0;
   totalValue = 0;
 
-  searchTerm = '';
-  allProducts: IProduct[] = [];
+  constructor(private productsService: ProductsService, private fb: FormBuilder) {
+    effect(() => {
+      const products = this.productsService.products();
 
-  isModalOpen = false;
+      this.totalProducts = products.length;
+      this.totalQuantity = products.reduce((t, p) => t + p.quantity, 0);
+      this.totalValue = products.reduce((t, p) => t + p.price * p.quantity, 0);
 
-  constructor(private productsService: ProductsService, private fb: FormBuilder) {}
+      this.allProducts = [...products];
+      this.products = [...products];
+    });
+  }
+
+  ngOnInit(): void {
+    this.initForm();
+    this.loadProducts();
+  }
 
   openModal() {
     this.isModalOpen = true;
@@ -38,25 +53,17 @@ export class Products implements OnInit {
     this.isModalOpen = false;
   }
 
-  ngOnInit(): void {
-    console.log('🧠 ngOnInit disparado!');
-    this.initForm();
-    this.loadProducts();
-    setTimeout(() => this.updatePriceDisplay(0));
-  }
-
   initForm() {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       description: [''],
       category: [''],
       quantity: [0, [Validators.required, Validators.min(0)]],
+      price: [0],
     });
   }
 
   createProduct() {
-    console.log('🟢 Enviando criação de produto...');
-
     if (this.productForm.invalid) return;
 
     const newProduct = {
@@ -67,15 +74,13 @@ export class Products implements OnInit {
 
     this.productsService.createProduct(newProduct).subscribe({
       next: (created) => {
-        console.log('✅ Produto criado:', created);
-        this.products.push(created);
-
         this.highlightedProductId = created.id;
         setTimeout(() => {
           this.highlightedProductId = null;
         }, 1000);
 
         this.productForm.reset({ quantity: 0, price: 0 });
+        this.closeModal();
       },
       error: (err) => console.error('Erro ao criar produto', err),
     });
@@ -91,8 +96,6 @@ export class Products implements OnInit {
       quantity: product.quantity,
       price: product.price,
     });
-
-    console.log('✏️ Editando produto:', product);
   }
 
   saveProduct() {
@@ -104,14 +107,10 @@ export class Products implements OnInit {
       quantity: Number(this.productForm.value.quantity),
     };
 
-    this.productsService.updateProduct(this.editingProductId, updatedData).subscribe({
-      next: () => {
-        console.log('✅ Produto atualizado com sucesso');
-        this.loadProducts();
-        this.editingProductId = null;
-        this.productForm.reset({ quantity: 0, price: 0 });
-      },
-      error: (err) => console.error('Erro ao atualizar produto', err),
+    this.productsService.createProduct(updatedData).subscribe((updated) => {
+      this.productsService.updateLocalProduct(updated);
+      this.editingProductId = null;
+      this.productForm.reset();
     });
   }
 
@@ -120,8 +119,8 @@ export class Products implements OnInit {
     this.productForm.reset({
       name: '',
       description: '',
-      quantity: null,
-      price: null,
+      quantity: 0,
+      price: 0,
     });
   }
 
@@ -133,20 +132,7 @@ export class Products implements OnInit {
   }
 
   loadProducts() {
-    this.productsService.getProducts().subscribe({
-      next: (response: any[]) => {
-        const listProduct = (this.products = response.map((p) => ({
-          ...p,
-          category: p.category?.name || p.category || '-',
-          quantity: p.quantity ?? 0,
-        })));
-
-        this.allProducts = listProduct;
-        this.products = listProduct;
-
-        this.calculateTotals();
-      },
-    });
+    this.productsService.loadProducts();
   }
 
   calculateTotals() {
@@ -160,15 +146,6 @@ export class Products implements OnInit {
 
   isLowStock(product: IProduct): boolean {
     return product.quantity < 5;
-  }
-
-  updatePriceDisplay(value: number) {
-    const formatted = value.toLocaleString('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    });
-    const input = document.querySelector<HTMLInputElement>('input[formControlName="price"]');
-    if (input) input.value = formatted;
   }
 
   onPriceInput(event: Event) {
@@ -186,12 +163,10 @@ export class Products implements OnInit {
 
     this.productForm.patchValue({ price: numericValue }, { emitEvent: false });
 
-    const formatted = numericValue.toLocaleString('pt-BR', {
+    input.value = numericValue.toLocaleString('pt-BR', {
       style: 'currency',
       currency: 'BRL',
     });
-
-    input.value = formatted;
   }
 
   onSearch(event: Event) {

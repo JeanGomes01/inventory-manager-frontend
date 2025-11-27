@@ -1,22 +1,20 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationsService {
-  private movementsCount = new BehaviorSubject<number>(0);
-  count$ = this.movementsCount.asObservable();
+  count = signal(0);
 
   setCount(count: number) {
-    this.movementsCount.next(count);
+    this.count.set(count);
   }
 
   increment() {
-    this.movementsCount.next(this.movementsCount.value + 1);
+    this.count.update((count) => count + 1);
   }
 
   clear() {
-    this.movementsCount.next(0);
+    this.count.set(0);
   }
 }

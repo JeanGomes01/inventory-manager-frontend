@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, effect } from '@angular/core';
 import { Chart } from 'chart.js/auto';
 import { MovementsService } from '../../services/movements.service';
 import { ProductsService } from '../../services/products.service';
 
 @Component({
   selector: 'app-home',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
@@ -14,31 +15,71 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   doughnutChart!: Chart;
   lowStockBarChart!: Chart;
 
+  loadingChart = true;
+  loadingLowStock = true;
+
   totalProducts = 0;
   lowStockCount = 0;
   recentMovementsCount = 0;
-
   recentMovements: any[] = [];
+
   lowStockProducts: any[] = [];
 
   loading = true;
   errorLoading = false;
 
-  loadingMovements = true;
-  loadingLowStock = true;
-
-  loadingChart = true;
-
   productsEmpty = false;
   movementsEmpty = false;
 
-  constructor(
-    private productsService: ProductsService,
-    private movementsService: MovementsService
-  ) {}
+  constructor(public productsService: ProductsService, public movementsService: MovementsService) {}
+
+  get movements() {
+    return this.movementsService.movements();
+  }
+
+  get loadingMovements() {
+    return this.movementsService.loading();
+  }
+  get errorMovements() {
+    return this.movementsService.error();
+  }
 
   ngOnInit(): void {
-    this.loadDashboard();
+    this.productsService.loadProducts();
+    this.movementsService.loadMovements();
+
+    effect(() => {
+      const products = this.productsService.products();
+      const movements = this.movementsService.movements();
+
+      const normalizedProducts = products.map((p: any) => ({
+        ...p,
+        category: p.category?.name || p.category || '-',
+      }));
+
+      this.totalProducts = normalizedProducts.length;
+      this.productsEmpty = normalizedProducts.length === 0;
+
+      this.lowStockProducts = normalizedProducts
+        .filter((p: any) => p.quantity < 5)
+        .map((p: any) => ({
+          id: p.id,
+          name: p.name,
+          quantity: p.quantity,
+          category: p.category,
+        }));
+
+      this.lowStockCount = this.lowStockProducts.length;
+      this.updateLowStockChart();
+
+      this.recentMovements = movements.slice(0, 5);
+      this.recentMovementsCount = movements.length;
+      this.movementsEmpty = movements.length === 0;
+
+      this.updateDoughnutChart(movements);
+
+      this.loading = false;
+    });
   }
 
   ngAfterViewInit(): void {
@@ -50,85 +91,16 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     this.lowStockBarChart?.destroy();
   }
 
-  loadDashboard() {
-    this.errorLoading = false;
-
-    this.movementsService.getMovements().subscribe({
-      next: (movements) => {
-        this.recentMovements = movements.slice(0, 5);
-        this.recentMovementsCount = movements.length;
-
-        this.movementsEmpty = movements.length === 0;
-
-        this.updateDoughnutChart(movements);
-
-        this.loadingMovements = false;
-        this.loadingChart = false;
-      },
-      error: () => {
-        this.errorLoading = true;
-        this.loadingMovements = false;
-        this.loadingChart = false;
-      },
-    });
-
-    this.productsService.getProducts().subscribe({
-      next: (products) => {
-        console.log('📥 Produtos recebidos:', products);
-
-        // ✅ Normaliza categoria para string
-        const normalizedProducts = products.map((p: any) => ({
-          ...p,
-          category: p.category?.name || p.category || '-',
-        }));
-
-        this.totalProducts = normalizedProducts.length;
-        this.productsEmpty = normalizedProducts.length === 0;
-
-        // ✅ Estoque baixo
-        this.lowStockProducts = normalizedProducts
-          .filter((p: any) => p.quantity < 5)
-          .map((p: any) => ({
-            id: p.id,
-            name: p.name,
-            quantity: p.quantity,
-            category: p.category,
-          }));
-
-        this.lowStockCount = this.lowStockProducts.length;
-
-        // ✅ Contagem por categoria (agora funciona)
-        const categoryCount: any = {};
-
-        normalizedProducts.forEach((product: any) => {
-          if (!categoryCount[product.category]) {
-            categoryCount[product.category] = 0;
-          }
-          categoryCount[product.category]++;
-        });
-
-        console.log('📦 Contagem por categoria:', categoryCount);
-
-        this.updateLowStockChart();
-        this.loadingLowStock = false;
-      },
-      error: () => {
-        this.errorLoading = true;
-        this.loadingLowStock = false;
-      },
-    });
-  }
-
   updateDoughnutChart(movements: any[]) {
     if (!this.doughnutChart) return;
 
     const entriesMovements = movements
-      .filter((movement) => movement.type === 'entrada')
-      .reduce((sum, movement) => sum + movement.quantity, 0);
+      .filter((m) => m.type === 'entrada')
+      .reduce((sum, m) => sum + m.quantity, 0);
 
     const exitsMovements = movements
-      .filter((movement) => movement.type === 'saida')
-      .reduce((sum, movement) => sum + movement.quantity, 0);
+      .filter((m) => m.type === 'saida')
+      .reduce((sum, m) => sum + m.quantity, 0);
 
     this.doughnutChart.data.datasets[0].data = [entriesMovements, exitsMovements];
     this.doughnutChart.update();
@@ -163,7 +135,10 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
           },
         ],
       },
-      options: { responsive: true, plugins: { legend: { display: false } } },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+      },
     });
   }
 

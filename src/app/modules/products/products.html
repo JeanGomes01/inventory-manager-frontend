@@ -59,6 +59,7 @@
         </div>
       </form>
     </app-modal>
+
     <button class="bg-green-600 text-white px-4 py-2 rounded-md" (click)="openModal()">
       + Adicionar Produto
     </button>
@@ -72,7 +73,7 @@
         <th class="p-3 text-left">Produto</th>
         <th class="p-3 text-left">Descrição</th>
         <th class="p-3 text-center">Categoria</th>
-        <th class="p-3 text-center">Quantity</th>
+        <th class="p-3 text-center">Quantidade</th>
         <th class="p-3 text-center">Ações</th>
       </tr>
     </thead>
@@ -88,9 +89,7 @@
       >
         <td class="p-3">{{ product.name }}</td>
         <td class="p-3">{{ product.description || '-' }}</td>
-        <td class="p-3 text-center">
-          {{ product.category }}
-        </td>
+        <td class="p-3 text-center">{{ product.category }}</td>
         <td class="p-3 text-center">{{ product.quantity || '-' }}</td>
         <td class="p-3 text-center">
           <div class="flex justify-center gap-2">
@@ -130,7 +129,7 @@
       </tr>
       } @else {
       <tr>
-        <td colspan="4" class="p-6 text-center text-gray-500 italic">Nenhum produto encontrado.</td>
+        <td colspan="5" class="p-6 text-center text-gray-500 italic">Nenhum produto encontrado.</td>
       </tr>
       }
     </tbody>
